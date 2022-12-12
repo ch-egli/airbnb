@@ -3,6 +3,7 @@ package ch.egli.bbshop
 import com.codeborne.selenide.Configuration
 import com.codeborne.selenide.Selenide.open
 import com.codeborne.selenide.SelenideElement
+import com.codeborne.selenide.ex.ElementNotFound
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -28,6 +29,7 @@ class AirBnBPageTest {
         private var bruneckCount: Int = -1
         private var seefeldCount: Int = -1
         private var innsbruckCount: Int = -1
+        private var brixenCount: Int = -1
     }
 
     @BeforeEach
@@ -43,6 +45,10 @@ class AirBnBPageTest {
         open(AirBnBPage.innsbruckUrl)
         innsbruckCount = getNumberOfHomes(AirBnBPage.nbHomesPath, "Innsbruck")
         Thread.sleep(5_000)
+
+        open(AirBnBPage.brixenUrl)
+        brixenCount = getNumberOfHomes(AirBnBPage.nbHomesPath, "Brixen")
+        Thread.sleep(5_000)
     }
 
     @Test
@@ -51,13 +57,16 @@ class AirBnBPageTest {
 
         while (true) {
             bruneckCount = check(AirBnBPage.bruneckUrl, "Bruneck", bruneckCount)
-            Thread.sleep(20_000)
+            Thread.sleep(200_000)
 
             seefeldCount = check(AirBnBPage.seefeldUrl, "Seefeld", seefeldCount)
-            Thread.sleep(20_000)
+            Thread.sleep(200_000)
 
             innsbruckCount = check(AirBnBPage.innsbruckUrl, "Innsbruck", innsbruckCount)
-            Thread.sleep(20_000)
+            Thread.sleep(200_000)
+
+            brixenCount = check(AirBnBPage.brixenUrl, "Brixen", brixenCount)
+            Thread.sleep(200_000)
         }
 
         // logger.info("${getCurrentTimestamp()} -- END")
@@ -73,17 +82,31 @@ class AirBnBPageTest {
     }
 
     private fun getNumberOfHomes(path: SelenideElement, location: String): Int {
-        var fullNbHomesText = "Search resultsOver 1,000 stays"
-        while (fullNbHomesText.contains("Search resultsOver 1,000 stays")) {
-            Thread.sleep(1_000)
-            fullNbHomesText = path.innerText()
-            logger.debug("${getCurrentTimestamp()} -- $location: fullNbHomesText: $fullNbHomesText")
+        // wait that page is completely loaded
+        Thread.sleep(3_000)
+
+        try {
+            val noExactMatches = AirBnBPage.noExactMatchesPath.innerText()
+            if (noExactMatches == "No exact matches") {
+                logger.info("${getCurrentTimestamp()} -- $location: numberOfHomes: 0")
+                return 0
+            }
+        } catch (ex: ElementNotFound) {
+            // logger.warn("noExactMatchesPath -> not found")
         }
 
-        val textWithHomes = fullNbHomesText.substringAfter("Search results")
-        val numberAsText = textWithHomes.substringBefore(" homes")
-        logger.info("${getCurrentTimestamp()} -- $location: numberOfHomes: $numberAsText")
-        return numberAsText.toIntOrNull() ?: 0
+        try {
+            val fullNbHomesText = path.innerText()
+            val textWithHomes = fullNbHomesText.substringAfter("Search results")
+            val numberAsText = textWithHomes.substringBefore(" home")
+            logger.info("${getCurrentTimestamp()} -- $location: numberOfHomes: $numberAsText")
+            return numberAsText.toIntOrNull() ?: 0
+        } catch (ex: ElementNotFound) {
+            logger.warn("nbHomesPath -> not found")
+        }
+
+        // indicate that an error occurred
+        return -1
     }
 
     private fun getCurrentTimestamp(): String {
