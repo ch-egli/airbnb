@@ -27,9 +27,13 @@ class AirBnBPageTest {
         private val logger: Logger = LoggerFactory.getLogger(AirBnBPageTest::class.java)
 
         private var bruneckCount: Int = -1
+        private var bruneckCount4: Int = -1
         private var seefeldCount: Int = -1
+        private var seefeldCount4: Int = -1
         private var innsbruckCount: Int = -1
+        private var innsbruckCount4: Int = -1
         private var brixenCount: Int = -1
+        private var brixenCount4: Int = -1
     }
 
     @BeforeEach
@@ -37,17 +41,29 @@ class AirBnBPageTest {
         open(AirBnBPage.bruneckUrl)
         bruneckCount = getNumberOfHomes(AirBnBPage.nbHomesPath, "Bruneck")
         Thread.sleep(5_000)
+        open(AirBnBPage.bruneckUrl4)
+        bruneckCount4 = getNumberOfHomes(AirBnBPage.nbHomesPath, "Bruneck4")
+        Thread.sleep(5_000)
 
         open(AirBnBPage.seefeldUrl)
         seefeldCount = getNumberOfHomes(AirBnBPage.nbHomesPath, "Seefeld")
+        Thread.sleep(5_000)
+        open(AirBnBPage.seefeldUrl4)
+        seefeldCount4 = getNumberOfHomes(AirBnBPage.nbHomesPath, "Seefeld4")
         Thread.sleep(5_000)
 
         open(AirBnBPage.innsbruckUrl)
         innsbruckCount = getNumberOfHomes(AirBnBPage.nbHomesPath, "Innsbruck")
         Thread.sleep(5_000)
+        open(AirBnBPage.innsbruckUrl4)
+        innsbruckCount4 = getNumberOfHomes(AirBnBPage.nbHomesPath, "Innsbruck4")
+        Thread.sleep(5_000)
 
         open(AirBnBPage.brixenUrl)
         brixenCount = getNumberOfHomes(AirBnBPage.nbHomesPath, "Brixen")
+        Thread.sleep(5_000)
+        open(AirBnBPage.brixenUrl4)
+        brixenCount4 = getNumberOfHomes(AirBnBPage.nbHomesPath, "Brixen4")
         Thread.sleep(5_000)
     }
 
@@ -57,16 +73,24 @@ class AirBnBPageTest {
 
         while (true) {
             bruneckCount = check(AirBnBPage.bruneckUrl, "Bruneck", bruneckCount)
-            Thread.sleep(200_000)
+            Thread.sleep(60_000)
+            bruneckCount4 = check(AirBnBPage.bruneckUrl4, "Bruneck4", bruneckCount4)
+            Thread.sleep(60_000)
 
             seefeldCount = check(AirBnBPage.seefeldUrl, "Seefeld", seefeldCount)
-            Thread.sleep(200_000)
+            Thread.sleep(60_000)
+            seefeldCount4 = check(AirBnBPage.seefeldUrl4, "Seefeld4", seefeldCount4)
+            Thread.sleep(60_000)
 
             innsbruckCount = check(AirBnBPage.innsbruckUrl, "Innsbruck", innsbruckCount)
-            Thread.sleep(200_000)
+            Thread.sleep(60_000)
+            innsbruckCount4 = check(AirBnBPage.innsbruckUrl4, "Innsbruck4", innsbruckCount4)
+            Thread.sleep(60_000)
 
             brixenCount = check(AirBnBPage.brixenUrl, "Brixen", brixenCount)
-            Thread.sleep(200_000)
+            Thread.sleep(60_000)
+            brixenCount4 = check(AirBnBPage.brixenUrl4, "Brixen4", brixenCount4)
+            Thread.sleep(60_000)
         }
 
         // logger.info("${getCurrentTimestamp()} -- END")
