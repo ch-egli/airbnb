@@ -57,5 +57,6 @@ class AirBnBPage {
 
         val nbHomesPath = Selenide.element(Selectors.byXpath("//*[@id=\"site-content\"]/div[2]/div[3]/div/div/div/div/section/h1"))
         val noExactMatchesPath = Selenide.element(Selectors.byXpath("//*[@id=\"site-content\"]/div[2]/div[4]/div/div/div/div[1]/div/div/div/div[1]/section/h2"))
+        val noExactMatchesPath2 = Selenide.element(Selectors.byXpath("//*[@id=\"site-content\"]/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[1]/section/h2"))
     }
 }

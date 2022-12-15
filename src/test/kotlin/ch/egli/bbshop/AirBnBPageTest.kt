@@ -38,13 +38,6 @@ class AirBnBPageTest {
 
     @BeforeEach
     fun setUp() {
-        open(AirBnBPage.bruneckUrl)
-        bruneckCount = getNumberOfHomes(AirBnBPage.nbHomesPath, "Bruneck")
-        Thread.sleep(5_000)
-        open(AirBnBPage.bruneckUrl4)
-        bruneckCount4 = getNumberOfHomes(AirBnBPage.nbHomesPath, "Bruneck4")
-        Thread.sleep(5_000)
-
         open(AirBnBPage.seefeldUrl)
         seefeldCount = getNumberOfHomes(AirBnBPage.nbHomesPath, "Seefeld")
         Thread.sleep(5_000)
@@ -65,6 +58,25 @@ class AirBnBPageTest {
         open(AirBnBPage.brixenUrl4)
         brixenCount4 = getNumberOfHomes(AirBnBPage.nbHomesPath, "Brixen4")
         Thread.sleep(5_000)
+
+        open(AirBnBPage.bruneckUrl)
+        bruneckCount = getNumberOfHomes(AirBnBPage.nbHomesPath, "Bruneck")
+        Thread.sleep(5_000)
+        open(AirBnBPage.bruneckUrl4)
+        bruneckCount4 = getNumberOfHomes(AirBnBPage.nbHomesPath, "Bruneck4")
+        Thread.sleep(5_000)
+
+        airBnBPage.sendMail(
+            "Links",
+            "${AirBnBPage.seefeldUrl}\n\n" +
+                    "${AirBnBPage.seefeldUrl4}\n\n" +
+                    "${AirBnBPage.innsbruckUrl}\n\n" +
+                    "${AirBnBPage.innsbruckUrl4}\n\n" +
+                    "${AirBnBPage.brixenUrl}\n\n" +
+                    "${AirBnBPage.brixenUrl4}\n\n" +
+                    "${AirBnBPage.bruneckUrl}\n\n" +
+                    "${AirBnBPage.bruneckUrl4}\n\n",
+            "")
     }
 
     @Test
@@ -72,25 +84,29 @@ class AirBnBPageTest {
         logger.info("${getCurrentTimestamp()} -- START")
 
         while (true) {
-            bruneckCount = check(AirBnBPage.bruneckUrl, "Bruneck", bruneckCount)
-            Thread.sleep(60_000)
-            bruneckCount4 = check(AirBnBPage.bruneckUrl4, "Bruneck4", bruneckCount4)
-            Thread.sleep(60_000)
+            try {
+                seefeldCount = check(AirBnBPage.seefeldUrl, "Seefeld", seefeldCount)
+                Thread.sleep(60_000)
+                seefeldCount4 = check(AirBnBPage.seefeldUrl4, "Seefeld4", seefeldCount4)
+                Thread.sleep(60_000)
 
-            seefeldCount = check(AirBnBPage.seefeldUrl, "Seefeld", seefeldCount)
-            Thread.sleep(60_000)
-            seefeldCount4 = check(AirBnBPage.seefeldUrl4, "Seefeld4", seefeldCount4)
-            Thread.sleep(60_000)
+                innsbruckCount = check(AirBnBPage.innsbruckUrl, "Innsbruck", innsbruckCount)
+                Thread.sleep(60_000)
+                innsbruckCount4 = check(AirBnBPage.innsbruckUrl4, "Innsbruck4", innsbruckCount4)
+                Thread.sleep(60_000)
 
-            innsbruckCount = check(AirBnBPage.innsbruckUrl, "Innsbruck", innsbruckCount)
-            Thread.sleep(60_000)
-            innsbruckCount4 = check(AirBnBPage.innsbruckUrl4, "Innsbruck4", innsbruckCount4)
-            Thread.sleep(60_000)
+                brixenCount = check(AirBnBPage.brixenUrl, "Brixen", brixenCount)
+                Thread.sleep(60_000)
+                brixenCount4 = check(AirBnBPage.brixenUrl4, "Brixen4", brixenCount4)
+                Thread.sleep(60_000)
 
-            brixenCount = check(AirBnBPage.brixenUrl, "Brixen", brixenCount)
-            Thread.sleep(60_000)
-            brixenCount4 = check(AirBnBPage.brixenUrl4, "Brixen4", brixenCount4)
-            Thread.sleep(60_000)
+                bruneckCount = check(AirBnBPage.bruneckUrl, "Bruneck", bruneckCount)
+                Thread.sleep(60_000)
+                bruneckCount4 = check(AirBnBPage.bruneckUrl4, "Bruneck4", bruneckCount4)
+                Thread.sleep(60_000)
+            } catch (e: Exception) {
+                logger.warn("unexpected exception: ${e.message}")
+            }
         }
 
         // logger.info("${getCurrentTimestamp()} -- END")
@@ -111,6 +127,16 @@ class AirBnBPageTest {
 
         try {
             val noExactMatches = AirBnBPage.noExactMatchesPath.innerText()
+            if (noExactMatches == "No exact matches") {
+                logger.info("${getCurrentTimestamp()} -- $location: numberOfHomes: 0")
+                return 0
+            }
+        } catch (ex: ElementNotFound) {
+            // logger.warn("noExactMatchesPath -> not found")
+        }
+
+        try {
+            val noExactMatches = AirBnBPage.noExactMatchesPath2.innerText()
             if (noExactMatches == "No exact matches") {
                 logger.info("${getCurrentTimestamp()} -- $location: numberOfHomes: 0")
                 return 0
