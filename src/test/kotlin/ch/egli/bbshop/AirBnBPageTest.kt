@@ -27,13 +27,11 @@ class AirBnBPageTest {
         private val logger: Logger = LoggerFactory.getLogger(AirBnBPageTest::class.java)
 
         private var bruneckCount: Int = -1
-        private var bruneckCount4: Int = -1
         private var seefeldCount: Int = -1
-        private var seefeldCount4: Int = -1
         private var innsbruckCount: Int = -1
-        private var innsbruckCount4: Int = -1
+        private var stubaiCount: Int = -1
         private var brixenCount: Int = -1
-        private var brixenCount4: Int = -1
+
     }
 
     @BeforeEach
@@ -41,41 +39,30 @@ class AirBnBPageTest {
         open(AirBnBPage.seefeldUrl)
         seefeldCount = getNumberOfHomes(AirBnBPage.nbHomesPath, "Seefeld")
         Thread.sleep(5_000)
-        open(AirBnBPage.seefeldUrl4)
-        seefeldCount4 = getNumberOfHomes(AirBnBPage.nbHomesPath, "Seefeld4")
-        Thread.sleep(5_000)
 
         open(AirBnBPage.innsbruckUrl)
         innsbruckCount = getNumberOfHomes(AirBnBPage.nbHomesPath, "Innsbruck")
         Thread.sleep(5_000)
-        open(AirBnBPage.innsbruckUrl4)
-        innsbruckCount4 = getNumberOfHomes(AirBnBPage.nbHomesPath, "Innsbruck4")
+
+        open(AirBnBPage.stubaiUrl)
+        stubaiCount = getNumberOfHomes(AirBnBPage.nbHomesPath, "Stubai")
         Thread.sleep(5_000)
 
         open(AirBnBPage.brixenUrl)
         brixenCount = getNumberOfHomes(AirBnBPage.nbHomesPath, "Brixen")
         Thread.sleep(5_000)
-        open(AirBnBPage.brixenUrl4)
-        brixenCount4 = getNumberOfHomes(AirBnBPage.nbHomesPath, "Brixen4")
-        Thread.sleep(5_000)
 
         open(AirBnBPage.bruneckUrl)
         bruneckCount = getNumberOfHomes(AirBnBPage.nbHomesPath, "Bruneck")
-        Thread.sleep(5_000)
-        open(AirBnBPage.bruneckUrl4)
-        bruneckCount4 = getNumberOfHomes(AirBnBPage.nbHomesPath, "Bruneck4")
         Thread.sleep(5_000)
 
         airBnBPage.sendMail(
             "Links",
             "${AirBnBPage.seefeldUrl}\n\n" +
-                    "${AirBnBPage.seefeldUrl4}\n\n" +
                     "${AirBnBPage.innsbruckUrl}\n\n" +
-                    "${AirBnBPage.innsbruckUrl4}\n\n" +
+                    "${AirBnBPage.stubaiUrl}\n\n" +
                     "${AirBnBPage.brixenUrl}\n\n" +
-                    "${AirBnBPage.brixenUrl4}\n\n" +
-                    "${AirBnBPage.bruneckUrl}\n\n" +
-                    "${AirBnBPage.bruneckUrl4}\n\n",
+                    "${AirBnBPage.bruneckUrl}\n\n",
             "")
     }
 
@@ -86,24 +73,19 @@ class AirBnBPageTest {
         while (true) {
             try {
                 seefeldCount = check(AirBnBPage.seefeldUrl, "Seefeld", seefeldCount)
-                Thread.sleep(60_000)
-                seefeldCount4 = check(AirBnBPage.seefeldUrl4, "Seefeld4", seefeldCount4)
-                Thread.sleep(60_000)
+                Thread.sleep(90_000)
 
                 innsbruckCount = check(AirBnBPage.innsbruckUrl, "Innsbruck", innsbruckCount)
-                Thread.sleep(60_000)
-                innsbruckCount4 = check(AirBnBPage.innsbruckUrl4, "Innsbruck4", innsbruckCount4)
-                Thread.sleep(60_000)
+                Thread.sleep(90_000)
+
+                stubaiCount = check(AirBnBPage.stubaiUrl, "Stubai", stubaiCount)
+                Thread.sleep(90_000)
 
                 brixenCount = check(AirBnBPage.brixenUrl, "Brixen", brixenCount)
-                Thread.sleep(60_000)
-                brixenCount4 = check(AirBnBPage.brixenUrl4, "Brixen4", brixenCount4)
-                Thread.sleep(60_000)
+                Thread.sleep(90_000)
 
                 bruneckCount = check(AirBnBPage.bruneckUrl, "Bruneck", bruneckCount)
-                Thread.sleep(60_000)
-                bruneckCount4 = check(AirBnBPage.bruneckUrl4, "Bruneck4", bruneckCount4)
-                Thread.sleep(60_000)
+                Thread.sleep(90_000)
             } catch (e: Exception) {
                 logger.warn("unexpected exception: ${e.message}")
             }
